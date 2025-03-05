@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+
++document.addEventListener("DOMContentLoaded", () => {
     const locationButton = document.getElementById("get-location");
     const videoElement = document.getElementById("bg-video");
 
@@ -52,19 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getCityFromCoords(lat, lon) {
-        console.log(`Fetching city for coordinates: lat=${lat}, lon=${lon}`);
-
         const nominatimURL = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
 
         fetch(nominatimURL)
             .then(response => response.json())
             .then(data => {
-                console.log("Nominatim API Response:", data);
                 const city = data.address.city || data.address.town || data.address.village;
 
                 if (city) {
-                    console.log("City found:", city);
-
                     const cityInput = document.getElementById('city');
                     if (cityInput) {
                         cityInput.value = city;
@@ -86,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let globalSunset = "-";
 
     function getWeather(city) {
-        const apiKey = '8ebe3cc4b0688494d81edf9a65c6c8e5';
+        const apiKey = 'dd6a2280fce50c5c899dc7c815a82f87';
         const cityInput = document.getElementById('city');
 
         if (!city) {
@@ -128,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("city").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
-            getWeather();
+            getWeather(this.value);
         }
     });
 
@@ -177,15 +173,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const formattedTime = date.toLocaleTimeString();
 
         const temperatureHTML = `<p>${temperature}°C</p>`;
-        const weatherHTML = `
-        <p><strong>City:</strong> ${cityName}</p>
-        <p><strong>Weather:</strong> ${description}</p>;
-        <p><strong>Humidity:</strong> ${humidity}%</p>
-        <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>;
-        <p><strong>Date:</strong> ${formattedDate}</p>
-        <p><strong>Time:</strong> ${formattedTime}</p>;
-        <p><strong>🌅 Sunrise:</strong> ${sunriseTime}</p>
-        <p><strong>🌇 Sunset:</strong> ${sunsetTime}</p>`;
+        document.getElementById("city-name").innerText = `${cityName}`;
+        document.getElementById("weather-description").innerText = `${description}`;
+        document.getElementById("sunrise").innerText = `🌅 Sunrise : ${sunriseTime}`;
+        document.getElementById("sunset").innerText = `🌇 Sunset : ${sunsetTime}`;
+        document.getElementById("humidity").innerText = `Humidity : ${humidity}%`;
+        document.getElementById("wind-speed").innerText = `Wind Speed : ${windSpeed} km/h`;
+        document.getElementById("date").innerText = `Date : ${formattedDate}`;
+        document.getElementById("time").innerText = `Time : ${formattedTime}`;
+
+        const weatherHTML = ``;
 
         tempDivInfo.innerHTML = temperatureHTML;
         weatherInfoDiv.innerHTML = weatherHTML;
@@ -229,50 +226,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (videoElement.src !== videoSrc) {
+            videoElement.pause();
             videoElement.src = videoSrc;
             videoElement.load();
-
-            videoElement.play().catch(error => {
-                console.error("Autoplay was prevented:", error);
-            });
-        }
-    }
-
-    function getWeeklyForecast(city) {
-        const apiKey = '8ebe3cc4b0688494d81edf9a65c6c8e5';
-        const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
-
-        fetch(forecastURL)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                const forecastContainer = document.getElementById("weekly-forecast");
-                forecastContainer.innerHTML = "";
-
-                data.list.forEach((day, index) => {
-                    let date = new Date(day.dt * 1000).toDateString();
-                    forecastContainer.innerHTML += `
-                    <div class="forecast-day">
-                        <p>${date}</p>
-                        <p>Temp: ${main.temp}°C</p> <!-- Error: should be day.main.temp -->
-                        <p>${day.weather[0].description}</p>
-                    </div>
-                `;
-                });
-            })
-            .catch(error => console.log("Error fetching data:", error));
+            videoElement.play().catch(error => console.error("Autoplay blocked:", error));
+        }        
     }
 
     function displayWeeklyForecast(forecastData) {
         const weeklyForecastDiv = document.getElementById('forecast-container');
         weeklyForecastDiv.innerHTML = "";
-
+    
         const dailyData = {};
-
+        const today = new Date();
+        const forecastDates = [];
+    
         forecastData.forEach(entry => {
             const dateObj = new Date(entry.dt * 1000);
-            const date = dateObj.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
-
+            const date = dateObj.toISOString().split('T')[0];
+    
             if (!dailyData[date]) {
                 dailyData[date] = {
                     tempMax: entry.main.temp,
@@ -284,64 +256,93 @@ document.addEventListener("DOMContentLoaded", () => {
                     sunrise: globalSunrise,
                     sunset: globalSunset
                 };
+                forecastDates.push(date);
             } else {
                 dailyData[date].tempMax = Math.max(dailyData[date].tempMax, entry.main.temp);
                 dailyData[date].tempMin = Math.min(dailyData[date].tempMin, entry.main.temp);
             }
-
+    
             if (entry.sys && entry.sys.sunrise && entry.sys.sunset) {
                 dailyData[date].sunrise = new Date(entry.sys.sunrise * 1000).toLocaleTimeString();
                 dailyData[date].sunset = new Date(entry.sys.sunset * 1000).toLocaleTimeString();
             }
         });
+    
+        while (forecastDates.length < 7) {
+            const lastDate = new Date(forecastDates[forecastDates.length - 1] || today);
+            lastDate.setDate(lastDate.getDate() + 1);
+            const nextDate = lastDate.toISOString().split('T')[0];
+    
+            if (!dailyData[nextDate]) {
+                dailyData[nextDate] = {
+                    tempMax: "-",
+                    tempMin: "-",
+                    icon: "01d",
+                    description: "No data",
+                    humidity: "-",
+                    windSpeed: "-"
+                };
+            }
+            forecastDates.push(nextDate);
+        }
+    
+        let forecastHTML = "";
+forecastDates.slice(0, 7).forEach(date => {
+    const { tempMax, tempMin, icon, description, humidity, windSpeed, sunrise, sunset } = dailyData[date] || {};
+    const iconURL = `https://openweathermap.org/img/wn/${icon}.png`;
 
-        Object.keys(dailyData).slice(0, 7).forEach(date => {
-            const { tempMax, tempMin, icon, description, humidity, windSpeed, sunrise, sunset } = dailyData[date];
-            const iconURL = `https://openweathermap.org/img/wn/${icon}.png`;
-
-            const sunriseTime = sunrise;
-            const sunsetTime = sunset;
-
-            const dayHtml = `
-            <div class="daily-item" onclick="toggleDetails('${date}')">
-                <span>${date}</span>
-                <img src="${iconURL}" alt="${description}">
-                <span>${description}</span>
-                <span>${Math.round(tempMax)}°C / ${Math.round(tempMin)}°C</span>
-            </div>
-            <div id="details-${date}" class="daily-details" style="display: none;">
-                <p><strong>Humidity:</strong> ${humidity}%</p>
-                <p><strong>Wind Speed:</strong> ${windSpeed} km/h</p>
-                <p><strong>🌅Sunrise:</strong> ${sunrise}</p>
-                <p><strong>🌇Sunset:</strong> ${sunset}</p>
-            </div>
-        `;
-            weeklyForecastDiv.innerHTML += dayHtml;
-        });
-    }
+    forecastHTML += `
+        <div class="daily-item" onclick="toggleDetails('${date}')">
+            <span>${new Date(date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
+            <img src="${iconURL}" alt="${description}">
+            <span>${description}</span>
+            <span>${tempMax !== "-" ? Math.round(tempMax) + "°C / " + Math.round(tempMin) + "°C" : "No Data"}</span>
+        </div>
+        <div id="details-${date}" class="daily-details">
+            <p><strong>🌅Sunrise:</strong> ${sunrise || "N/A"}</p>
+            <p><strong>🌇Sunset:</strong> ${sunset || "N/A"}</p>
+            <div id="left">
+                    <i class="fa-solid fa-water"></i>
+                    <p id="humidity">Humidity: ${humidity}%</p>
+                    <i class="fa-solid fa-wind wind"></i>
+                    <p id="wind-speed">Wind Speed: ${windSpeed} km/h</p>
+                </div>
+        </div>
+    `;
+});
+weeklyForecastDiv.innerHTML = forecastHTML;
+    }    
 
     function toggleDetails(date) {
         document.querySelectorAll('.daily-details').forEach(detail => {
             if (detail.id !== `details-${date}`) {
-                detail.style.display = "none";
+                detail.classList.remove("show");
+                setTimeout(() => {
+                    detail.style.display = "none";
+                }, 500);
             }
         });
-
+    
         const detailsDiv = document.getElementById(`details-${date}`);
-
+    
         if (detailsDiv) {
-            if (detailsDiv.style.display === "none" || detailsDiv.style.display === "") {
+            if (!detailsDiv.classList.contains("show")) {
                 detailsDiv.style.display = "block";
+                setTimeout(() => {
+                    detailsDiv.classList.add("show");
+                }, 10);
             } else {
-                detailsDiv.style.display = "none";
+                detailsDiv.classList.remove("show");
+                setTimeout(() => {
+                    detailsDiv.style.display = "none";
+                }, 500);
             }
         } else {
             console.error("Element not found:", `details-${date}`);
         }
     }
-
-
-
+    
+    
     function displayHourlyForecast(hourlyData) {
         const hourlyForecastDiv = document.getElementById('hourly-forecast');
         hourlyForecastDiv.innerHTML = "";
@@ -405,11 +406,45 @@ function login() {
         alert("Login Successful!");
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("username", username);
+        
         document.getElementById("login-modal").style.display = "none";
-        document.getElementById("login-btn").innerText = "Logout"; 
+
+        const loginBtn = document.getElementById("login-btn");
+        loginBtn.innerText = "Logout";
+        loginBtn.removeEventListener("click", openLoginModal);
+        loginBtn.addEventListener("click", logout);
     } else {
-        alert("Invalid Username or Password");
+        alert("Invalid username or password.");
     }
+}
+
+function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+
+    alert("Logged out successfully!");
+
+    const loginBtn = document.getElementById("login-btn");
+    loginBtn.innerText = "Login";
+    loginBtn.removeEventListener("click", logout);
+    loginBtn.addEventListener("click", openLoginModal);
+}
+
+window.onload = function () {
+    getWeather("Delhi");
+
+    const loginBtn = document.getElementById("login-btn");
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        loginBtn.innerText = "Logout";
+        loginBtn.addEventListener("click", logout);
+    } else {
+        loginBtn.innerText = "Login";
+        loginBtn.addEventListener("click", openLoginModal);
+    }
+};
+
+function openLoginModal() {
+    document.getElementById("login-modal").style.display = "flex";
 }
 
 document.getElementById("login-btn").addEventListener("click", function () {

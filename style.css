@@ -13,19 +13,25 @@ body {
 }
 
 header {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px 20px;
 }
 
 nav {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
-    max-width: 900px;
-    margin: auto;
+    justify-content: space-between;
+    width: 100%;
 }
 
 h1 {
+    margin-left: 20px;
     font-size: 24px;
     background: linear-gradient(90deg, #7700ff, #ff0000);
     background-clip: text;
@@ -35,55 +41,75 @@ h1 {
 .search-box {
     display: flex;
     align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
     padding: 5px 10px;
-    border-radius: 25px;
+    width: fit-content;
+    max-width: 300px;
 }
 
 .search-box input {
-    background: transparent;
-    padding: 8px 12px;
+    border: none;
+    background: transparent !important;
+    padding: 8px;
+    color: white;
     outline: none;
+    width: auto;
+    min-width: 100px;
 }
 
 .search-box button {
-    background: #fc126b;
+    background: #534e46;
     border: none;
-    padding: 9px 15px;
-    border-radius: 0 10px 0 0;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
     cursor: pointer;
+    white-space: nowrap;
+    font-weight: bold;
 }
 
 .search-box i {
-    background: #fc126b;
+    background: transparent;
+    color: rgb(138, 135, 135);
     border: none;
-    padding: 10px 15px;
+    padding: 5px;
     border-radius: 0 0 0 10px;
     cursor: pointer;
 }
 
 i:hover {
-    background: linear-gradient(90deg, #f3030f, #ff0080);
     color: #726464;
 }
 
-button:hover {
+.search-box button:hover {
     background: linear-gradient(90deg, #f3030f, #ff0080);
 }
 
 main {
     display: flex;
     flex-direction: column;
-    align-items:flex-start;
-    gap: 20px;
-    max-width: 100%;
+    align-items: center;
     width: 100%;
+    padding: 20px;
 }
 
 @media (min-width: 768px) {
     main {
+        display: flex;
         flex-direction: row;
-        justify-content:flex-start;
-        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    #weather-container {
+        width: 50%;
+        max-width: 400px;
+    }
+
+    #weekly-forecast {
+        width: 80%;
     }
 }
 
@@ -125,9 +151,31 @@ h2 {
     }
 }
 
+#city-name{
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 26px;
+    text-transform: uppercase;
+    background: transparent;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(14, 2, 2, 0.1);
+    border-top: 1px solid rgba(14, 2, 2, 0.1);
+    width: 100%;
+    background: linear-gradient(20deg, #130005, #f88e02);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: Georgia;
+}
+
+#weather-description{
+    font-weight: 400;
+    font-family: Times New Roman;
+}
+
 #temp-div p {
     font-size: 50px;
     margin-top: -30px;
+    margin-bottom: 20px;
 }
 
 #weather-info {
@@ -141,10 +189,35 @@ h2 {
     display: none;
 }
 
+.hwdt{
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+#left{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(56, 120, 136, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    border-bottom: 1px solid black;
+}
+
+#right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(56, 120, 136, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    border-bottom: 1px solid black;
+}
 
 #hourly-forecast {
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
     overflow-x: auto;
     white-space: nowrap;
     justify-content: space-between;
@@ -199,7 +272,7 @@ h2 {
 }
 
 h3 {
-    background: linear-gradient(90deg, #fce305, #fd0404);
+    background: linear-gradient(0deg, #fd2002, #faf601);
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-style:initial;
@@ -208,13 +281,14 @@ h3 {
 #forecast-container {
     display: flex;
     overflow-x: auto;
-    gap: 10px;
+    gap: 5px;
     padding: 10px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .daily-item {
+    position: relative;
     flex: 0 0 auto;
     text-align: center;
     padding: 10px;
@@ -247,30 +321,29 @@ h3 {
 
 .daily-details {
     display: none;
-    background: rgba(220, 120, 255, 0.4);
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 5px;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 !important;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    transition: max-height 0.5s ease-in-out;
 }
 
-.daily-details:not(.hidden) {
+.daily-details.show {
     display: block;
-}
-
-footer {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    margin-top: auto;
+    max-height: 300px;
+    padding: 10px !important;
+    border: 1px solid #ccc;
 }
 
 #login-btn {
     font-size: 16px;
     font-weight: 700;
     padding: 8px 12px;
+    margin-top: 8px;
     cursor: pointer;
-    border: none;
     border-radius: 0 16px 0 16px;
-    cursor: pointer;
+    background: linear-gradient(90deg, #f3030f, #ff0080);
 }
 
 .modal {
@@ -334,4 +407,33 @@ footer {
 
 #login-modal p{
     color: black;
+}
+
+footer {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .search-box {
+        width: auto;
+        margin: auto;
+    }
+
+    footer {
+        font-size: 14px;
+    }
 }
