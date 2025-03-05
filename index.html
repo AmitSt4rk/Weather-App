@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -29,26 +29,26 @@
         </nav>
     </header>
 
-<div id="login-modal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Login</h2>
-        <input type="text" id="login-username" placeholder="Enter Username" required>
-        <input type="password" id="login-password" placeholder="Enter Password" required>
-        <button onclick="login()">Login</button>
-        <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <input type="text" id="login-username" placeholder="Enter Username" required>
+            <input type="password" id="login-password" placeholder="Enter Password" required>
+            <button onclick="login()">Login</button>
+            <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+        </div>
     </div>
-</div>
 
-<div id="signup-modal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-username" placeholder="Create Username" required>
-        <input type="password" id="signup-password" placeholder="Create Password" required>
-        <button onclick="signup()">Sign Up</button>
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Create Username" required>
+            <input type="password" id="signup-password" placeholder="Create Password" required>
+            <button onclick="signup()">Sign Up</button>
+        </div>
     </div>
-</div>
 
 
     <main>
@@ -56,26 +56,46 @@
             <h2>Today's Forecast</h2>
             <p id="city-name"></p>
 
-            <p id="weather-description"></p>
             <img id="weather-icon" alt="Weather Icon">
 
             <div id="temp-div"></div>
+            <p id="weather-description"></p>
 
             <p id="sunrise">🌅 Sunrise: </p>
             <p id="sunset">🌇 Sunset: </p>
 
             <div class="hwdt">
                 <div id="left">
-                    <i class="fa-solid fa-water"></i>
-                    <p id="humidity">Humidity: </p>
-                    <i class="fa-solid fa-wind wind"></i>
-                    <p id="wind-speed">Wind Speed: </p>
+                    <div class="humi">
+                        <i id="humi-icon" class="fa-solid fa-water"></i>
+                        <div class="h">
+                            <p id="humidity"></p>
+                            <p id="hu">Humidity</p>
+                        </div>
+                    </div>
+                    <div class="wind">
+                        <i id="wind-icon" class="fa-solid fa-wind wind"></i>
+                        <div class="w">
+                            <p id="wind-speed"></p>
+                            <p id="wi">Wind Speed</p>
+                        </div>
+                    </div>
                 </div>
                 <div id="right">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <p id="date">📅 Date: </p>
-                    <i class="fa-solid fa-clock"></i>
-                    <p id="time">⏰ Time: </p>
+                    <div class="dat">
+                        <i id="date-icon" class="fa-solid fa-calendar-days"></i>
+                        <div class="d">
+                            <p id="da">Date :</p>
+                            <p id="date"></p>
+                        </div>
+                    </div>
+                    <div class="tim">
+                        <i id="time-icon" class="fa-solid fa-clock"></i>
+                        <div class="t">
+                            <p id="ti">Time :</p>
+                            <p id="time"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

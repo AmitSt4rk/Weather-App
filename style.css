@@ -6,7 +6,7 @@
 }
 
 body {
-    background: linear-gradient(to top, rgba(0,0,0,0.5)50%,rgba(0,0,0,0.5)50%), url(Images/background.jpg);
+    background: linear-gradient(to top, rgba(0,0,0,0.5)50%,rgba(0,0,0,0.5)50%), url(/background.jpg);
     background-position: center;
     background-size: cover;
     min-height: 100vh;
@@ -110,7 +110,7 @@ main {
     }
 
     #weekly-forecast {
-        width: 80%;
+        height: 80%;
     }
 }
 
@@ -169,14 +169,15 @@ h2 {
 }
 
 #weather-description{
+    font-size: 20px;
     font-weight: 400;
     font-family: Times New Roman;
+    margin-bottom: 16px;
 }
 
 #temp-div p {
     font-size: 50px;
     margin-top: -30px;
-    margin-bottom: 20px;
 }
 
 #weather-info {
@@ -200,17 +201,45 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background: rgba(56, 120, 136, 0.2);
     padding: 10px;
     border-radius: 10px;
     border-bottom: 1px solid black;
+}
+
+.humi, .wind, .dat, .tim{
+    display: flex;
+    align-items: center;
+}
+
+#humi-icon, #wind-icon, #date-icon, #time-icon{
+    font-size: 40px;
+}
+
+.h, .w, .d, .t{
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.humi, .dat{
+    padding-bottom: 10px;
+    border-bottom: 1px solid gray;
+    width: 100%;
+}
+
+.wind, .tim{
+    padding-top: 5px;
+}
+
+#wi, #hu, #da, #ti{
+    font-size: 12px;
 }
 
 #right{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background: rgba(56, 120, 136, 0.2);
     padding: 10px;
     border-radius: 10px;
     border-bottom: 1px solid black;
@@ -285,7 +314,7 @@ h3 {
     gap: 5px;
     padding: 10px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .daily-item {
