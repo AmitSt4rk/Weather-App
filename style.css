@@ -467,3 +467,30 @@ footer {
         font-size: 14px;
     }
 }
+
+#hourly-forecast::-webkit-scrollbar{
+    height: 6px;
+}
+
+#hourly-forecast::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, rgb(248, 3, 23, 0.4), rgba(248, 80, 3, 0.4));
+    border-radius: 12px;
+}
+
+html, body {
+    height: 100%;
+    overflow-y: auto;
+}
+
+body::-webkit-scrollbar{
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: rgb(7, 7, 7, 0.8);
+    border-radius: 12px;
+}
