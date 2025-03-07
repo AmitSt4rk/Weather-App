@@ -6,7 +6,7 @@
 }
 
 body {
-    background: linear-gradient(to top, rgba(0,0,0,0.5)50%,rgba(0,0,0,0.5)50%), url(/background.jpg);
+    background: linear-gradient(to top, rgba(0,0,0,0.8)50%,rgba(0,0,0,0.8)50%), url(/background.jpg);
     background-position: center;
     background-size: cover;
     min-height: 100vh;
@@ -195,6 +195,7 @@ h2 {
     display: flex;
     margin-top: 20px;
     justify-content: space-between;
+    color: rgb(173, 172, 172);
 }
 
 #left{
@@ -275,21 +276,6 @@ h2 {
 #hourly-heading {
     color: #fff;
     margin-top: 10px;
-}
-
-#bg-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -1;
-}
-
-.bg-video.fade-out {
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
 }
 
 #weekly-forecast {

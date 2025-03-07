@@ -1,7 +1,6 @@
 
 +document.addEventListener("DOMContentLoaded", () => {
     const locationButton = document.getElementById("get-location");
-    const videoElement = document.getElementById("bg-video");
 
     if (locationButton) {
         locationButton.addEventListener("click", () => {
@@ -23,12 +22,6 @@
             }
         });
     }
-    function playVideo() {
-        videoElement.play().catch(error => console.error("Autoplay prevented. User interaction needed.", error));
-    }
-
-    document.addEventListener("click", playVideo, { once: true });
-    document.addEventListener("keydown", playVideo, { once: true });
 
     getWeather("Delhi");
 
@@ -165,8 +158,6 @@ function displayWeather(data) {
     const sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
     const sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString();
 
-    updateBackgroundVideo(data);
-
     const timestamp = data.dt * 1000;
     const date = new Date(timestamp);
     const formattedDate = date.toLocaleDateString();
@@ -189,48 +180,6 @@ function displayWeather(data) {
     weatherIcon.src = iconURL;
     weatherIcon.alt = description;
     weatherIcon.style.display = 'block';
-}
-
-function updateBackgroundVideo(weatherData) {
-    const videoElement = document.getElementById('bg-video');
-    const currentTime = new Date().getTime() / 1000;
-    const sunrise = weatherData.sys.sunrise;
-    const sunset = weatherData.sys.sunset;
-
-    let isNight = currentTime < sunrise || currentTime > sunset;
-    let weatherCondition = weatherData.weather[0].main.toLowerCase();
-    let videoSrc = "";
-
-    if (weatherCondition.includes("clear")) {
-        videoSrc = isNight ? "Videos/clear-night.mp4" : "Videos/clear-day.mp4";
-    } else if (weatherCondition.includes("clouds")) {
-        if (weatherData.weather[0].description.includes("few")) {
-            videoSrc = isNight ? "Videos/few-clouds-night.mp4" : "Videos/few-clouds-day.mp4";
-        } else if (weatherData.weather[0].description.includes("scattered")) {
-            videoSrc = isNight ? "Videos/scattered-clouds-night.mp4" : "Videos/scattered-clouds-day.mp4";
-        } else {
-            videoSrc = isNight ? "Videos/broken-clouds-night.mp4" : "Videos/broken-clouds-day.mp4";
-        }
-    } else if (weatherCondition.includes("rain")) {
-        videoSrc = isNight ? "Videos/rain-night.mp4" : "Videos/rain-day.mp4";
-    } else if (weatherCondition.includes("thunderstorm")) {
-        videoSrc = isNight ? "Videos/thunderstorm-night.mp4" : "Videos/thunderstorm-day.mp4";
-    } else if (weatherCondition.includes("snow")) {
-        videoSrc = isNight ? "Videos/snow-night.mp4" : "Videos/snow-day.mp4";
-    } else if (weatherCondition.includes("mist") || weatherCondition.includes("haze") || weatherCondition.includes("fog")) {
-        videoSrc = isNight ? "Videos/mist-night.mp4" : "Videos/mist-day.mp4";
-    } else if (weatherCondition.includes("sand") || weatherCondition.includes("dust")) {
-        videoSrc = isNight ? "Videos/sandstorm-night.mp4" : "Videos/sandstorm-day.mp4";
-    } else {
-        videoSrc = isNight ? "Videos/default-night.mp4" : "Videos/default-day.mp4";
-    }
-
-    if (videoElement.src !== videoSrc) {
-        videoElement.pause();
-        videoElement.src = videoSrc;
-        videoElement.load();
-        videoElement.play().catch(error => console.error("Autoplay blocked:", error));
-    }
 }
 
 function displayWeeklyForecast(forecastData) {
