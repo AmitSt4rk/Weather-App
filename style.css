@@ -315,6 +315,7 @@ h3 {
     padding: 10px;
     flex-wrap: wrap;
     justify-content: flex-start;
+    max-width: 560px;
 }
 
 .daily-item {
